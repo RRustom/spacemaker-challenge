@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/spacemaker-challenge/static/css/main.b4304a67.css",
+    "main.js": "/spacemaker-challenge/static/js/main.825dd76a.js",
+    "static/js/787.c1112931.chunk.js": "/spacemaker-challenge/static/js/787.c1112931.chunk.js",
+    "index.html": "/spacemaker-challenge/index.html",
+    "main.b4304a67.css.map": "/spacemaker-challenge/static/css/main.b4304a67.css.map",
+    "main.825dd76a.js.map": "/spacemaker-challenge/static/js/main.825dd76a.js.map",
+    "787.c1112931.chunk.js.map": "/spacemaker-challenge/static/js/787.c1112931.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b4304a67.css",
+    "static/js/main.825dd76a.js"
+  ]
+}
