@@ -9,6 +9,7 @@ export const SolutionsProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [currentSolutionId, setCurrentSolutionId] = useState(null);
+  const [currentPolygonIndex, setCurrentPolygonIndex] = useState(null);
 
   useEffect(() => {
     if (_.isEmpty(solutions)) {
@@ -28,8 +29,24 @@ export const SolutionsProvider = ({ children }) => {
   }, [currentSolutionId]);
 
   const memoedValues = useMemo(
-    () => ({ solutions, currentSolutionId, setCurrentSolutionId, isLoading, isError }),
-    [solutions, currentSolutionId, setCurrentSolutionId, isLoading, isError],
+    () => ({
+      solutions,
+      currentSolutionId,
+      setCurrentSolutionId,
+      isLoading,
+      isError,
+      currentPolygonIndex,
+      setCurrentPolygonIndex,
+    }),
+    [
+      solutions,
+      currentSolutionId,
+      setCurrentSolutionId,
+      isLoading,
+      isError,
+      currentPolygonIndex,
+      setCurrentPolygonIndex,
+    ],
   );
 
   return <SolutionsContext.Provider value={memoedValues}>{children}</SolutionsContext.Provider>;

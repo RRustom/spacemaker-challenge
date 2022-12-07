@@ -16,6 +16,7 @@ const WorkspacePage = () => {
           backgroundColor: 'black',
           width: '100%',
           height: 80,
+          minHeight: 80,
         }}
       >
         <Logo />

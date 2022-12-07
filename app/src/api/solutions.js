@@ -21,6 +21,7 @@ class SolutionsAPI {
   }
 }
 
-const _transform = (data) => data.features.map((x) => x.geometry.coordinates[0]);
+const _transform = (data) =>
+  data.features.map((x) => x.geometry.coordinates[0].map((coord) => [coord[1], coord[0]]));
 
 export default SolutionsAPI;

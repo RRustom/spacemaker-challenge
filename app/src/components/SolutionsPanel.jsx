@@ -2,12 +2,13 @@ import React from 'react';
 import useSolutions from 'context/solutions';
 
 const SolutionsPanel = () => {
-  const { currentSolutionId, setCurrentSolutionId, solutions } = useSolutions();
+  const { currentSolutionId, setCurrentSolutionId, setCurrentPolygonIndex, solutions } =
+    useSolutions();
 
   return (
     <div
       style={{
-        borderRightWidth: '2px',
+        borderRightWidth: '4px',
         borderRightStyle: 'solid',
         borderRightColor: 'black',
         display: 'flex',
@@ -23,7 +24,10 @@ const SolutionsPanel = () => {
           <div
             key={solutionId}
             style={{ cursor: 'pointer', background: isCurrentSolution ? 'grey' : 'none' }}
-            onClick={() => setCurrentSolutionId(solutionId)}
+            onClick={() => {
+              setCurrentSolutionId(solutionId);
+              setCurrentPolygonIndex(null);
+            }}
           >{`Solution ${solutionId}`}</div>
         );
       })}
