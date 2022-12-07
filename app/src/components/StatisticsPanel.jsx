@@ -2,6 +2,7 @@ import React from 'react';
 import useSolutions from 'context/solutions';
 import geojsonArea from '@mapbox/geojson-area';
 import _ from 'lodash';
+import * as turf from '@turf/turf';
 
 const StatisticsPanel = () => {
   return (
@@ -22,29 +23,27 @@ const StatisticsPanel = () => {
 };
 
 const _Statistics = () => {
-  const { solutions, currentSolutionId, currentPolygonIndex, isLoading } = useSolutions();
-
-  console.log('currentSolutionId: ', currentSolutionId);
-  console.log('currentPolygonIndex: ', currentPolygonIndex);
+  const { solutions, currentSolutionId, polygonSelection, isLoading } = useSolutions();
 
   if (
     isLoading ||
     !currentSolutionId ||
     _.isEmpty(solutions[currentSolutionId]) ||
-    currentPolygonIndex == null
+    polygonSelection.isEmpty()
   )
     return null;
 
-  const geoJSON = {
-    type: 'Polygon',
-    coordinates: [
-      solutions[currentSolutionId][currentPolygonIndex].map((coord) => [coord[1], coord[0]]),
-    ],
-  };
+  const selectedPolygons = polygonSelection.polygons.map((polygonId) => {
+    const polygon = solutions[currentSolutionId].find((x) => x.id === polygonId);
+    const linearRing = [polygon.coords.map((coord) => [coord[1], coord[0]])];
 
-  console.log('geoJSON: ', geoJSON);
+    return turf.polygon(linearRing);
+  });
 
-  const area = geojsonArea.geometry(geoJSON);
+  const area = selectedPolygons.reduce(
+    (accumulator, polygon) => accumulator + turf.area(polygon),
+    0,
+  );
 
   return <div>Area: {area} m^2</div>;
 };

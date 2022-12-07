@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import SolutionsAPI from 'api/solutions';
+import usePolygonSelection from 'hooks/usePolygonSelection';
 import _ from 'lodash';
 
 export const SolutionsContext = createContext();
@@ -9,7 +10,7 @@ export const SolutionsProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [currentSolutionId, setCurrentSolutionId] = useState(null);
-  const [currentPolygonIndex, setCurrentPolygonIndex] = useState(null);
+  const polygonSelection = usePolygonSelection();
 
   useEffect(() => {
     if (_.isEmpty(solutions)) {
@@ -28,24 +29,29 @@ export const SolutionsProvider = ({ children }) => {
     }
   }, [currentSolutionId]);
 
+  const switchToSolution = ({ solutionId }) => {
+    setCurrentSolutionId(solutionId);
+    polygonSelection.clear();
+  };
+
   const memoedValues = useMemo(
     () => ({
       solutions,
+      setSolutions,
       currentSolutionId,
-      setCurrentSolutionId,
+      switchToSolution,
       isLoading,
       isError,
-      currentPolygonIndex,
-      setCurrentPolygonIndex,
+      polygonSelection,
     }),
     [
       solutions,
+      setSolutions,
       currentSolutionId,
-      setCurrentSolutionId,
+      switchToSolution,
       isLoading,
       isError,
-      currentPolygonIndex,
-      setCurrentPolygonIndex,
+      polygonSelection,
     ],
   );
 

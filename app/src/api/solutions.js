@@ -1,5 +1,6 @@
 import solution1 from 'data/SE_State_Management_Polygons_1.json';
 import solution2 from 'data/SE_State_Management_Polygons_2.json';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Dummy API that reads from local data files.
@@ -22,6 +23,9 @@ class SolutionsAPI {
 }
 
 const _transform = (data) =>
-  data.features.map((x) => x.geometry.coordinates[0].map((coord) => [coord[1], coord[0]]));
+  data.features.map((x) => ({
+    id: uuidv4(),
+    coords: x.geometry.coordinates[0].map((coord) => [coord[1], coord[0]]),
+  }));
 
 export default SolutionsAPI;
