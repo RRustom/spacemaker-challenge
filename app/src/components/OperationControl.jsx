@@ -2,26 +2,16 @@ import React, { useMemo } from 'react';
 import useSolutions from 'context/solutions';
 import _ from 'lodash';
 import Button from '@mui/material/Button';
-import * as turf from '@turf/turf';
 import { v4 as uuidv4 } from 'uuid';
 
-const UNION = 'union';
-const INTERSECTION = 'intersect';
+import performOperation, { UNION, INTERSECTION } from 'utils/performOperation';
 
 const OperationControl = ({ setError }) => {
   const { solutions, setSolutions, currentSolutionId, featureSelection } = useSolutions();
   const selectedPolygons = featureSelection.all();
 
   const __handleOperation = ({ operationType }) => {
-    const result = selectedPolygons.reduce((accumulator, feature) => {
-      if (!accumulator) return feature;
-
-      if (operationType === UNION) {
-        return turf.union(accumulator, feature);
-      } else {
-        return turf.intersect(accumulator, feature);
-      }
-    });
+    const result = performOperation({ operationType, features: selectedPolygons });
 
     if (!result) return setError('Invalid operation');
 

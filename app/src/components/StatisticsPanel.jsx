@@ -1,7 +1,7 @@
 import React from 'react';
 import useSolutions from 'context/solutions';
 import _ from 'lodash';
-import * as turf from '@turf/turf';
+import getArea from 'utils/getArea';
 
 const StatisticsPanel = () => {
   return (
@@ -32,9 +32,7 @@ const _Statistics = () => {
   )
     return null;
 
-  const area = featureSelection
-    .all()
-    .reduce((accumulator, polygon) => accumulator + turf.area(polygon), 0);
+  const area = getArea({ features: featureSelection.all() });
 
   return <div>Area: {area} m^2</div>;
 };
