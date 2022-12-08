@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import SolutionsAPI from 'api/solutions';
-import usePolygonSelection from 'hooks/usePolygonSelection';
+import usePolygonSelection from 'hooks/useFeatureSelection';
 import _ from 'lodash';
 
 export const SolutionsContext = createContext();
@@ -10,7 +10,7 @@ export const SolutionsProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [currentSolutionId, setCurrentSolutionId] = useState(null);
-  const polygonSelection = usePolygonSelection();
+  const featureSelection = usePolygonSelection({ features: solutions[currentSolutionId] });
 
   useEffect(() => {
     if (_.isEmpty(solutions)) {
@@ -31,7 +31,7 @@ export const SolutionsProvider = ({ children }) => {
 
   const switchToSolution = ({ solutionId }) => {
     setCurrentSolutionId(solutionId);
-    polygonSelection.clear();
+    featureSelection.clear();
   };
 
   const memoedValues = useMemo(
@@ -42,7 +42,7 @@ export const SolutionsProvider = ({ children }) => {
       switchToSolution,
       isLoading,
       isError,
-      polygonSelection,
+      featureSelection,
     }),
     [
       solutions,
@@ -51,7 +51,7 @@ export const SolutionsProvider = ({ children }) => {
       switchToSolution,
       isLoading,
       isError,
-      polygonSelection,
+      featureSelection,
     ],
   );
 
@@ -71,7 +71,6 @@ const __fetchSolutionIds = async ({
   try {
     setIsLoading(true);
     const response = await SolutionsAPI.getAllSolutionIds();
-    console.log('SOLUTION IDS: ', response);
     if (response) {
       setSolutions((solutions) => ({
         ...solutions,

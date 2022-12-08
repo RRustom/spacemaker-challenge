@@ -25,7 +25,7 @@ class SolutionsAPI {
 const _transform = (data) =>
   data.features.map((x) => ({
     id: uuidv4(),
-    coords: x.geometry.coordinates[0].map((coord) => [coord[1], coord[0]]),
+    geometry: x.geometry,
   }));
 
 export default SolutionsAPI;

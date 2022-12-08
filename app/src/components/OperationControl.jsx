@@ -4,110 +4,49 @@ import _ from 'lodash';
 import Button from '@mui/material/Button';
 import * as turf from '@turf/turf';
 import { v4 as uuidv4 } from 'uuid';
-import L from 'leaflet';
+
+const UNION = 'union';
+const INTERSECTION = 'intersect';
 
 const OperationControl = ({ setError }) => {
-  const { solutions, setSolutions, currentSolutionId, polygonSelection } = useSolutions();
+  const { solutions, setSolutions, currentSolutionId, featureSelection } = useSolutions();
+  const selectedPolygons = featureSelection.all();
 
-  console.log('SELECTION: ', polygonSelection.polygons);
+  const __handleOperation = ({ operationType }) => {
+    const result = selectedPolygons.reduce((accumulator, feature) => {
+      if (!accumulator) return feature;
 
-  const __handleIntersection = () => {
-    if (polygonSelection.polygons.length !== 2) return setError('Can only intersect 2 polygons');
-
-    console.log('polygonSelection.polygons: ', polygonSelection.polygons);
-
-    const selectedPolygons = polygonSelection.polygons.map((polygonId) => {
-      const polygon = solutions[currentSolutionId].find((x) => x.id === polygonId);
-      const linearRing = [polygon.coords.map((coord) => [coord[1], coord[0]])];
-      return turf.polygon(linearRing);
+      if (operationType === UNION) {
+        return turf.union(accumulator, feature);
+      } else {
+        return turf.intersect(accumulator, feature);
+      }
     });
 
-    const intersection = turf.intersect(selectedPolygons[0], selectedPolygons[1]);
-
-    console.log('Intersection: ', intersection);
-
-    if (!intersection) return setError('Invalid intersection');
+    if (!result) return setError('Invalid operation');
 
     const newPolygonId = uuidv4();
 
-    polygonSelection.clear();
+    featureSelection.clear();
 
     setSolutions((solution) => {
-      const updatedPolygons = [
+      const updatedFeatures = [
         ...solutions[currentSolutionId].filter((polygon) => {
-          return !polygonSelection.isSelected({ id: polygon.id });
+          return !featureSelection.isSelected({ id: polygon.id });
         }),
         {
           id: newPolygonId,
-          coords: turf.getCoords(intersection)[0].map((coord) => [coord[1], coord[0]]),
+          geometry: result.geometry,
         },
       ];
 
-      console.log('updated polygons: ', updatedPolygons);
-
-      return { ...solution, [currentSolutionId]: updatedPolygons };
+      return { ...solution, [currentSolutionId]: updatedFeatures };
     });
 
-    polygonSelection.add({ id: newPolygonId });
+    featureSelection.add({ id: newPolygonId });
   };
 
-  const __handleUnion = () => {
-    console.log('UNION');
-    if (polygonSelection.polygons.length !== 2) return setError('Can only union 2 polygons');
-
-    console.log('polygonSelection.polygons: ', polygonSelection.polygons);
-
-    const selectedPolygons = polygonSelection.polygons.map((polygonId) => {
-      const polygon = solutions[currentSolutionId].find((x) => x.id === polygonId);
-      const linearRing = [polygon.coords.map((coord) => [coord[1], coord[0]])];
-      return turf.polygon(linearRing);
-    });
-    // const union = selectedPolygons.reduce((accumulator, polygon) => {
-    //   if (!accumulator) return polygon
-    //   return turf.union(accumulator, polygon)
-    // }, null)
-
-    const union = turf.union(selectedPolygons[0], selectedPolygons[1]);
-
-    console.log('UNION: ', union);
-
-    if (!union) return setError('Invalid union');
-
-    const newPolygonId = uuidv4();
-
-    polygonSelection.clear();
-
-    setSolutions((solution) => {
-      const updatedPolygons = [
-        ...solutions[currentSolutionId].filter((polygon) => {
-          return !polygonSelection.isSelected({ id: polygon.id });
-        }),
-        { id: newPolygonId, coords: turf.getCoords(union)[0].map((coord) => [coord[1], coord[0]]) },
-      ];
-
-      console.log('updated polygons: ', updatedPolygons);
-
-      return { ...solution, [currentSolutionId]: updatedPolygons };
-    });
-
-    polygonSelection.add({ id: newPolygonId });
-  };
-
-  const notEnoughSelected = polygonSelection.polygons.length < 2;
-
-  //   const controls = useMemo(
-  //     () => (
-  //       <div style={{ background: 'white', display: 'flex', flexFlow: 'column nowrap' }}>
-  //         <Button variant='text' onClick={() => __handleUnion()}>
-  //           Union
-  //         </Button>
-  //         <Button variant='text' onClick={__handleIntersection}>
-  //           Intersect
-  //         </Button>
-  //       </div>
-  //     ),
-  //     [],
-  //   );
+  const notEnoughSelected = selectedPolygons.length < 2;
 
   if (notEnoughSelected) return null;
 
@@ -124,17 +63,10 @@ const OperationControl = ({ setError }) => {
         bottom: 0,
       }}
     >
-      <Button
-        variant='text'
-        onClick={(e) => {
-          e.stopPropagation();
-          L.DomEvent.stopPropagation(e);
-          __handleUnion();
-        }}
-      >
+      <Button variant='text' onClick={() => __handleOperation({ operationType: UNION })}>
         Union
       </Button>
-      <Button variant='text' onClick={__handleIntersection}>
+      <Button variant='text' onClick={() => __handleOperation({ operationType: INTERSECTION })}>
         Intersect
       </Button>
     </div>

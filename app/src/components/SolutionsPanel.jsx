@@ -2,7 +2,7 @@ import React from 'react';
 import useSolutions from 'context/solutions';
 
 const SolutionsPanel = () => {
-  const { currentSolutionId, switchToSolution, setCurrentPolygonIndex, solutions } = useSolutions();
+  const { currentSolutionId, switchToSolution, solutions } = useSolutions();
 
   return (
     <div
