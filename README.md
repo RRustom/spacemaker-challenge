@@ -60,7 +60,7 @@ I also opted to minimize ownership and TTV for this problem by using [`turf`](ht
 
 I decided to not store state as turf objects, and instead adopt a more functional approach of converting from our simple GeoSJON objects source of truth whenever necessary. This prevents our app from being too tightly coupled with `turf`, in case we wanted to replace it in the future.
 
-## 5. Future-proof readiness for change
+### 5. Future-proof readiness for change
 
 The way that the app is setup allows us to:
 1. Easily connect to a backend to read and write solution data
@@ -68,8 +68,3 @@ The way that the app is setup allows us to:
 3. Easily replace `turf` dependency
 4. Support arbitrary GeoJSON geometries out of the box, for future use cases.
 5. Easily onboard other developers! I made sure to use good names, `prettier`, `eslint`, absolute imports, and other clean coding chonventions in order to allow the codebase to grow in complexity without slowing down development.
-
-# TODO
-- test area accumulator
-- test union + intersection accumulators (going in multiple orders)
-- test basic react flows
