@@ -22,7 +22,12 @@ const SolutionsPanel = () => {
         return (
           <div
             key={solutionId}
-            style={{ cursor: 'pointer', background: isCurrentSolution ? 'grey' : 'none' }}
+            style={{
+              cursor: 'pointer',
+              background: isCurrentSolution ? 'grey' : 'none',
+              fontSize: 18,
+              padding: 8,
+            }}
             onClick={() => switchToSolution({ solutionId })}
           >{`Solution ${solutionId}`}</div>
         );

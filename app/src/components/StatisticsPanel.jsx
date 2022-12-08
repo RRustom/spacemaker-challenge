@@ -15,7 +15,17 @@ const StatisticsPanel = () => {
         flex: 1,
       }}
     >
-      <div>Statistics</div>
+      <div
+        style={{
+          fontSize: 18,
+          borderBottomWidth: '2px',
+          borderBottomColor: 'black',
+          borderBottomStyle: 'solid',
+          padding: 8,
+        }}
+      >
+        Statistics
+      </div>
       <_Statistics />
     </div>
   );
@@ -34,7 +44,11 @@ const _Statistics = () => {
 
   const area = getArea({ features: featureSelection.all() });
 
-  return <div>Area: {area} m^2</div>;
+  return (
+    <div style={{ padding: 8 }}>
+      <strong>Area:</strong> {area} m<sup>2</sup>
+    </div>
+  );
 };
 
 export default StatisticsPanel;

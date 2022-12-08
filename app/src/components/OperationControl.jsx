@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import useSolutions from 'context/solutions';
 import _ from 'lodash';
 import Button from '@mui/material/Button';
 import { v4 as uuidv4 } from 'uuid';
+import { styled } from '@mui/material/styles';
 
 import performOperation, { UNION, INTERSECTION } from 'utils/performOperation';
 
@@ -43,7 +44,8 @@ const OperationControl = ({ setError }) => {
   return (
     <div
       style={{
-        background: 'white',
+        background: 'black',
+        // color: 'white',
         display: 'flex',
         flexFlow: 'column nowrap',
         position: 'absolute',
@@ -53,14 +55,42 @@ const OperationControl = ({ setError }) => {
         bottom: 0,
       }}
     >
-      <Button variant='text' onClick={() => __handleOperation({ operationType: UNION })}>
+      <_Button
+        variant='text'
+        disableRipple
+        onClick={() => __handleOperation({ operationType: UNION })}
+      >
         Union
-      </Button>
-      <Button variant='text' onClick={() => __handleOperation({ operationType: INTERSECTION })}>
+      </_Button>
+      <_Button
+        variant='text'
+        disableRipple
+        onClick={() => __handleOperation({ operationType: INTERSECTION })}
+      >
         Intersect
-      </Button>
+      </_Button>
     </div>
   );
 };
+
+const _Button = styled(Button)({
+  boxShadow: 'none',
+  textTransform: 'none',
+  fontSize: 16,
+  padding: '6px 12px',
+  lineHeight: 1.5,
+  backgroundColor: 'black',
+  color: 'white',
+  '&:hover': {
+    boxShadow: 'none',
+    textDecoration: 'underline',
+  },
+  '&:active': {
+    textDecoration: 'underline',
+  },
+  '&:focus': {
+    textDecoration: 'underline',
+  },
+});
 
 export default OperationControl;

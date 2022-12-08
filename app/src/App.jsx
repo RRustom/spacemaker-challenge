@@ -6,6 +6,7 @@ import WorkspacePage from 'pages/WorkspacePage';
 import { SolutionsProvider } from 'context/solutions';
 
 const customTheme = createTheme({
+  theme: 'dark',
   shape: {
     borderRadius: 8,
   },
