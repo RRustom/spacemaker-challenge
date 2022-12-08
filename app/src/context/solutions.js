@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import SolutionsAPI from 'api/solutions';
-import usePolygonSelection from 'hooks/useFeatureSelection';
+import useFeatureSelection from 'hooks/useFeatureSelection';
 import _ from 'lodash';
 
 export const SolutionsContext = createContext();
@@ -10,7 +10,7 @@ export const SolutionsProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [currentSolutionId, setCurrentSolutionId] = useState(null);
-  const featureSelection = usePolygonSelection({ features: solutions[currentSolutionId] });
+  const featureSelection = useFeatureSelection({ features: solutions[currentSolutionId] });
 
   useEffect(() => {
     if (_.isEmpty(solutions)) {
